@@ -1,0 +1,27 @@
+/* Design 1: Bubble. Lavender, white cards and soft blob buddies, after the Habitz screens. */
+[data-design="bubble"] {
+  --bg: #DCC6F6;
+  --ink: #1E1636;
+  --muted: #7A6E92;
+  --card: #fff;
+  --primary: #6B35D9;
+  --primary-ink: #fff;
+  --track: #F1EAFB;
+  --display: "Fredoka", "Nunito", sans-serif;
+  --font: "Nunito", sans-serif;
+}
+[data-design="bubble"] .sky {
+  background:
+    radial-gradient(260px 220px at 92% 6%, rgba(255, 255, 255, .45), transparent 70%),
+    radial-gradient(200px 200px at -4% 40%, rgba(255, 182, 214, .45), transparent 70%),
+    radial-gradient(240px 220px at 104% 70%, rgba(150, 214, 255, .35), transparent 70%),
+    linear-gradient(180deg, #C9A8F0 0%, #DCC6F6 45%, #F3ECFC 100%);
+}
+[data-design="bubble"] .hero { padding-top: 26px; }
+[data-design="bubble"] .rainbow { box-shadow: inset 0 3px 6px rgba(60, 30, 120, .12); }
+[data-design="bubble"] .rainbow .bar-fill::after {
+  content: ""; position: absolute; left: 12px; right: 12px; top: 5px; height: 8px; border-radius: 99px; background: rgba(255, 255, 255, .45);
+}
+[data-design="bubble"] .btn-words { background: linear-gradient(160deg, #8B5CF0, #6B35D9); }
+[data-design="bubble"] .btn-plate { box-shadow: 0 0 0 6px rgba(255, 255, 255, .55), var(--shadow); }
+[data-design="bubble"] .top h1 { color: #2B1757; }

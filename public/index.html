@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Eat the Rainbow</title>
+<meta name="theme-color" content="#C9A8F0">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rainbow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Gaegu:wght@400;700&family=Nunito:wght@500;700;800&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css?v=1">
+<link rel="stylesheet" href="css/design-bubble.css?v=1">
+<link rel="stylesheet" href="css/design-chart.css?v=1">
+<link rel="stylesheet" href="css/design-galaxy.css?v=1">
+<script>
+  // Pick the saved design before first paint so the page doesn't flash.
+  (function () {
+    var d = new URLSearchParams(location.search).get("design");
+    try { d = d || localStorage.getItem("design"); } catch (e) {}
+    document.documentElement.dataset.design = ["bubble", "chart", "galaxy"].indexOf(d) >= 0 ? d : "bubble";
+  })();
+</script>
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+
+<main class="app">
+  <!-- HOME -->
+  <section class="screen" id="home" data-route="">
+    <header class="top">
+      <img class="logo" src="img/icon-192.png" alt="">
+      <h1>Eat the Rainbow</h1>
+      <button class="icon-btn design-btn" id="design-btn" aria-label="Change design">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 3a9 9 0 0 0 0 18c1.1 0 1.8-.8 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8Zm-5.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"/></svg>
+      </button>
+    </header>
+
+    <div class="hero">
+      <p class="week-label" id="home-week">This week</p>
+      <div class="count-wrap">
+        <div class="count" id="home-count" aria-live="polite"></div>
+        <div class="count-text">
+          <span class="count-unit">plants</span>
+          <span class="count-goal" id="home-goal">this week · goal 30</span>
+        </div>
+      </div>
+      <button class="rainbow" id="home-bar" aria-label="See this week's rainbow">
+        <span class="bar-fill"></span>
+        <span class="bar-empty">Eat a plant to start your rainbow</span>
+      </button>
+      <div class="tally" id="home-tally"></div>
+      <p class="bar-hint">Tap the rainbow to see your week</p>
+    </div>
+
+    <div class="buddies" aria-hidden="true" id="buddies"></div>
+
+    <nav class="actions">
+      <a class="btn-words" href="#words">
+        <span class="btn-words-icon" aria-hidden="true">✏️</span>
+        <span>What we ate</span>
+      </a>
+      <a class="btn-plate" href="#kid" aria-label="Kid mode: pick foods with pictures">
+        <img src="img/plate.webp" alt="">
+      </a>
+    </nav>
+  </section>
+
+  <!-- WORDS MODE -->
+  <section class="screen" id="words" data-route="words">
+    <header class="bar-top">
+      <a class="icon-btn back" href="#" aria-label="Back">←</a>
+      <h2>What we ate</h2>
+    </header>
+    <div class="search">
+      <input id="food-input" type="text" autocomplete="off" autocapitalize="none" enterkeyhint="done"
+             placeholder="Type a food… banana, almonds" aria-label="Type a food">
+      <ul class="suggest" id="suggest" role="listbox"></ul>
+    </div>
+    <div class="picked-empty" id="picked-empty">
+      <p>Add everything you ate, then tap <b>Add to rainbow</b>.</p>
+    </div>
+    <ul class="picked" id="picked"></ul>
+    <div class="sticky-cta">
+      <button class="btn-primary" id="words-submit" disabled>Add to rainbow</button>
+    </div>
+  </section>
+
+  <!-- KID MODE: pick a color -->
+  <section class="screen kid" id="kid" data-route="kid">
+    <header class="bar-top">
+      <a class="icon-btn back" href="#" aria-label="Back">←</a>
+      <img class="kid-plate" src="img/plate.webp" alt="">
+    </header>
+    <div class="color-grid" id="color-grid"></div>
+  </section>
+
+  <!-- KID MODE: foods in one color -->
+  <section class="screen kid" id="kid-foods" data-route="kid/">
+    <header class="bar-top">
+      <a class="icon-btn back" href="#kid" aria-label="Back to colors">←</a>
+      <span class="kid-color-badge" id="kid-color-badge"></span>
+    </header>
+    <div class="bubbles" id="bubbles"></div>
+  </section>
+
+  <!-- THIS WEEK -->
+  <section class="screen" id="week" data-route="week">
+    <header class="bar-top">
+      <a class="icon-btn back" href="#" aria-label="Back">←</a>
+      <div class="week-nav">
+        <button class="icon-btn" id="week-prev" aria-label="Previous week">‹</button>
+        <h2 id="week-title">This week</h2>
+        <button class="icon-btn" id="week-next" aria-label="Next week">›</button>
+      </div>
+    </header>
+    <div class="week-summary">
+      <div class="week-count"><b id="week-count">0</b> <span>plants</span></div>
+      <div class="rainbow small" id="week-bar"><span class="bar-fill"></span><span class="bar-empty">No plants this week</span></div>
+    </div>
+    <div class="day-grid" id="day-grid"></div>
+    <div class="week-list" id="week-list"></div>
+  </section>
+</main>
+
+<!-- Kid tray: picked foods + Done -->
+<div class="tray" id="tray" hidden>
+  <div class="tray-items" id="tray-items"></div>
+  <button class="tray-done" id="tray-done" aria-label="Done" disabled>
+    <svg viewBox="0 0 24 24" width="34" height="34"><path fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+  </button>
+</div>
+
+<!-- Color picker for a food we don't know -->
+<div class="sheet" id="color-sheet" hidden>
+  <div class="sheet-card">
+    <h3>What color is <span id="new-food-name"></span>?</h3>
+    <div class="color-choices" id="color-choices"></div>
+    <button class="btn-ghost" id="color-cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Design picker (to compare the three looks) -->
+<div class="sheet" id="design-sheet" hidden>
+  <div class="sheet-card">
+    <h3>Pick a design</h3>
+    <div class="design-choices">
+      <button data-design="bubble"><span class="sw sw-bubble"></span><b>Bubble</b><small>Lavender and soft shapes</small></button>
+      <button data-design="chart"><span class="sw sw-chart"></span><b>Crayon Chart</b><small>Paper chart and markers</small></button>
+      <button data-design="galaxy"><span class="sw sw-galaxy"></span><b>Galaxy</b><small>Glowing night sky</small></button>
+    </div>
+    <button class="btn-ghost" id="design-close">Close</button>
+  </div>
+</div>
+
+<!-- Celebrations -->
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="sticker" id="sticker" hidden><div class="sticker-foods" id="sticker-foods"></div><div class="sticker-label" id="sticker-label">New Plant!</div></div>
+<div class="banner" id="banner" hidden></div>
+<div class="unicorn" id="unicorn" hidden><img src="img/unicorn.webp" alt="A cat riding a unicorn on a shooting star"></div>
+<div class="toast" id="toast" hidden></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="crayon"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+</svg>
+
+<script type="module" src="js/app.js?v=1"></script>
+</body>
+</html>

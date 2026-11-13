@@ -1,0 +1,84 @@
+/* Design 2: Crayon Chart. Looks like the laminated Rainbow Food Tracker on the fridge:
+   cream paper, chart squares, purple dry-erase marker and handwriting. */
+[data-design="chart"] {
+  --bg: #FBF6EC;
+  --ink: #2F2A3A;
+  --muted: #857B6C;
+  --card: #FFFDF8;
+  --card-line: #E8DFCB;
+  --shadow: 0 2px 0 #E8DFCB, 0 8px 18px rgba(80, 60, 20, .08);
+  --primary: #6A45C2;          /* the purple marker */
+  --primary-ink: #fff;
+  --track: repeating-linear-gradient(90deg, #F1EADB 0 calc(100% / 30 - 2px), #FFFDF8 calc(100% / 30 - 2px) calc(100% / 30));
+  --radius: 14px;
+  --bar-h: 40px;
+  --bar-radius: 8px;
+  --display: "Gaegu", "Comic Sans MS", cursive;
+  --font: "Nunito", sans-serif;
+}
+[data-design="chart"] body {
+  background-color: #FBF6EC;
+  background-image: linear-gradient(#EFE7D6 1px, transparent 1px), linear-gradient(90deg, #EFE7D6 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+[data-design="chart"] h1, [data-design="chart"] h2, [data-design="chart"] h3 { font-weight: 700; }
+[data-design="chart"] .top h1 { font-family: "Nunito", sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -.5px; }
+[data-design="chart"] .top .logo { border-radius: 8px; transform: rotate(-4deg); }
+
+/* number written in marker, with a scribbled underline */
+[data-design="chart"] .hero { text-align: left; transform: rotate(-.6deg); padding: 18px 18px 16px; }
+[data-design="chart"] .count-wrap { flex-direction: row; align-items: flex-end; gap: 14px; }
+[data-design="chart"] .count { color: var(--primary); font-size: 120px; justify-content: flex-start; font-weight: 700; }
+[data-design="chart"] .digit { width: .42em; }
+[data-design="chart"] .count-text { padding-bottom: 14px; }
+[data-design="chart"] .count-unit { font-size: 34px; color: var(--primary); }
+[data-design="chart"] .week-label { font-family: "Nunito"; text-transform: uppercase; letter-spacing: 1.5px; font-size: 12px; }
+[data-design="chart"] .bar-hint { text-align: left; font-family: "Gaegu"; font-size: 17px; }
+
+/* the bar: coloured in with crayon inside a marker outline; faint ticks count to 30 */
+[data-design="chart"] .rainbow { box-shadow: 0 0 0 2.5px var(--primary); filter: url(#crayon); }
+[data-design="chart"] .rainbow .bar-fill { opacity: .92; }
+[data-design="chart"] .rainbow .bar-empty { font-family: "Gaegu"; font-size: 18px; }
+
+/* tally and day grid: the chart's squares, ticked with a marker X */
+[data-design="chart"] .tally { justify-content: space-between; gap: 6px; }
+[data-design="chart"] .tally-item { flex-direction: column; opacity: 1; gap: 2px; font-family: "Gaegu"; font-size: 20px; color: var(--primary); }
+[data-design="chart"] .tally-sq { width: 40px; height: 40px; border-radius: 6px; background: color-mix(in srgb, var(--c) 70%, #fff); }
+[data-design="chart"] .tally-item:not(.on) b { opacity: .3; }
+[data-design="chart"] .tally-item.on .tally-sq::after,
+[data-design="chart"] .dg-cell.on::after {
+  content: "✕"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--primary);
+  font-family: "Gaegu"; font-weight: 700; font-size: 34px; line-height: 1; transform: rotate(-8deg);
+}
+[data-design="chart"] .dg-cell { border-radius: 5px; background: color-mix(in srgb, var(--c) 62%, #fff); }
+[data-design="chart"] .dg-cell.on { background: color-mix(in srgb, var(--c) 62%, #fff); }
+[data-design="chart"] .dg-cell.on::after { font-size: 26px; }
+[data-design="chart"] .dg-head { font-family: "Nunito"; letter-spacing: 1px; }
+
+/* buddies become chart squares with faces */
+[data-design="chart"] .blob { border-radius: 9px !important; transform: none; }
+[data-design="chart"] .buddies .blob { width: 40px; height: 40px; }
+[data-design="chart"] .buddies .blob:nth-child(odd) { rotate: -5deg; }
+[data-design="chart"] .buddies .blob:nth-child(even) { rotate: 4deg; }
+
+/* buttons: a sticky note and a plate drawn around with dashes */
+[data-design="chart"] .btn-words {
+  background: #FFE27A; color: var(--ink); border-radius: 4px; transform: rotate(-2deg); font-family: "Gaegu"; font-size: 34px; font-weight: 700;
+  box-shadow: 0 10px 18px rgba(80, 60, 20, .16); clip-path: polygon(0 0, 100% 0, 100% 86%, 90% 100%, 0 100%);
+}
+[data-design="chart"] .btn-words:active { transform: rotate(-2deg) scale(.95); }
+[data-design="chart"] .btn-plate { background: #FFFDF8; outline: 3px dashed var(--primary); outline-offset: 4px; }
+[data-design="chart"] .btn-primary { font-family: "Gaegu"; font-size: 28px; font-weight: 700; border-radius: 10px; }
+[data-design="chart"] .icon-btn { border-radius: 10px; }
+[data-design="chart"] .search input { border-radius: 10px; font-family: "Gaegu"; font-size: 24px; }
+[data-design="chart"] .picked li { border-radius: 10px; }
+[data-design="chart"] .color-btn { border-radius: 14px; background: color-mix(in srgb, var(--c) 62%, #fff); }
+[data-design="chart"] .color-btn:nth-child(odd) { rotate: -2deg; }
+[data-design="chart"] .color-btn:nth-child(even) { rotate: 2deg; }
+[data-design="chart"] .bubble { border-radius: 18px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 60%, #fff), var(--shadow); }
+[data-design="chart"] .bubble.on { box-shadow: 0 0 0 5px var(--primary), var(--shadow); }
+[data-design="chart"] .tray { border-radius: 16px; border: 2px solid var(--card-line); }
+[data-design="chart"] .tray-done { border-radius: 16px; }
+[data-design="chart"] .week-count { font-size: 28px; color: var(--primary); }
+[data-design="chart"] .wl-group { border-top-width: 2px; border-left: 10px solid var(--c); }
+[data-design="chart"] .sheet-card { border-radius: 16px 16px 0 0; }
