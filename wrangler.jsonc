@@ -12,8 +12,8 @@
     {
       "binding": "DB",
       "database_name": "eat-the-rainbow",
-      // Replace with the id from `npx wrangler d1 create eat-the-rainbow` (README > Set up on Cloudflare).
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      // No database_id: `wrangler deploy` creates the database the first time and links it.
+      // The Worker creates its tables itself on first use (ensureSchema in src/worker.js).
       "migrations_dir": "migrations"
     }
   ],

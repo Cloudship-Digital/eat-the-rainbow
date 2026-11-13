@@ -20,7 +20,7 @@ foods); yogurt and kefir are left out.
 
 ## Three designs
 
-Same app, three looks, to compare. Tap the palette button on the home screen, or add `?design=` to the address:
+Same app, three looks. **Bubble is the one live.** The others can be seen by adding `?design=` to the address (the choice is remembered on that device). The palette button that switches them is hidden (`hidden` on `#design-btn` in `public/index.html`). Two more options, Garden Patch and Pop Sticker, are mockups in Figma (`design/figma-two-new-designs.png`).
 
 | Design | Address | Feel |
 |---|---|---|
@@ -28,7 +28,6 @@ Same app, three looks, to compare. Tap the palette button on the home screen, or
 | Crayon Chart | `/?design=chart` | The laminated fridge chart: cream grid paper, chart squares, purple marker ✕s, handwriting |
 | Galaxy | `/?design=galaxy` | Night sky: glowing orb count, neon-tube rainbow, planet bubbles |
 
-The choice is remembered on each device. Once one is picked, the others can be deleted (`public/css/design-*.css`).
 
 ## How it works
 
@@ -54,17 +53,17 @@ npm run dev          # applies the migrations to a local database, then serves h
 npm test
 ```
 
-## Set up on Cloudflare (Joshua)
+## On Cloudflare
 
-1. In this folder: `npx wrangler login`, then `npx wrangler d1 create eat-the-rainbow`.
-   Copy the `database_id` it prints into `wrangler.jsonc` (replacing the zeros) and commit it.
-2. Create the tables: `npx wrangler d1 migrations apply eat-the-rainbow --remote`.
-3. Cloudflare dashboard > Workers & Pages > Create > Import a repository > `Cloudship-Digital/eat-the-rainbow`,
-   branch `main`, build command empty, deploy command `npx wrangler deploy`.
-4. Worker > Settings > Domains & Routes > Add > Custom domain: `rainbow.cloudshipdigital.com`.
-5. On the phones and tablet, open the address and use Share > *Add to Home Screen*: it opens like an app.
+Live at **https://rainbow.cloudshipdigital.app**, deployed by Workers Builds from `main`
+(build command empty, deploy command `npx wrangler deploy`).
 
-Database changes go in a new numbered file in `migrations/`, then step 2 again.
+- The D1 database has no `database_id` in `wrangler.jsonc`: `wrangler deploy` creates it on the first
+  deploy and links it after that. The Worker creates its tables on first use (`ensureSchema` in
+  `src/worker.js`), so there are no migrations to run by hand for this first version.
+- Later database changes: add a numbered file in `migrations/`, add the same change to `ensureSchema`
+  if it must apply automatically, or run `npx wrangler d1 migrations apply eat-the-rainbow --remote`.
+- Phones and tablet: open the address and use Share > *Add to Home Screen*.
 
 ## Art
 

@@ -11,6 +11,7 @@ export default {
     const url = new URL(request.url);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
     try {
+      await ensureSchema(env);
       const res = await api(request, env, url);
       res.headers.set("Cache-Control", "no-store");
       res.headers.set("X-Robots-Tag", "noindex");
@@ -24,6 +25,21 @@ export default {
 };
 
 class BadRequest extends Error {}
+
+// The tables from migrations/0001_init.sql, created if missing, so a fresh database works
+// without running migrations by hand. Runs once per Worker instance.
+let schemaReady = null;
+function ensureSchema(env) {
+  schemaReady ||= env.DB.batch([
+    env.DB.prepare(`CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY AUTOINCREMENT, food TEXT NOT NULL, name TEXT NOT NULL,
+      color TEXT NOT NULL, servings INTEGER NOT NULL DEFAULT 1, day TEXT NOT NULL, week TEXT NOT NULL, created_at TEXT NOT NULL)`),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS entries_week ON entries (week)"),
+    env.DB.prepare("CREATE INDEX IF NOT EXISTS entries_food ON entries (food)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS custom_foods (id TEXT PRIMARY KEY, name TEXT NOT NULL, color TEXT NOT NULL)"),
+    env.DB.prepare("CREATE TABLE IF NOT EXISTS celebrations (week TEXT NOT NULL, kind TEXT NOT NULL, PRIMARY KEY (week, kind))"),
+  ]).catch((e) => { schemaReady = null; throw e; });
+  return schemaReady;
+}
 
 async function api(request, env, url) {
   const path = url.pathname;
