@@ -85,6 +85,21 @@ h1, h2, h3 { font-family: var(--display); margin: 0; font-weight: 600; }
 .rainbow:not(.is-empty) .bar-empty { display: none; }
 button.rainbow { cursor: pointer; transition: transform .15s; }
 button.rainbow:active { transform: scale(.98); }
+.scope { display: flex; gap: 4px; padding: 4px; margin: 2px auto 0; border-radius: 999px; background: var(--track); width: max-content; }
+.scope button { padding: 8px 16px; border-radius: 999px; font-weight: 800; font-size: 15px; color: var(--muted); transition: background .2s, color .2s; }
+.scope button.on { background: var(--primary); color: var(--primary-ink); box-shadow: var(--shadow); }
+.scope-label { margin: -4px 0 0; font-weight: 800; font-size: 14px; color: var(--muted); }
+.rainbow.tiny { --bar-h: 18px; flex: 1; }
+.rainbow.tiny .bar-empty { font-size: 12px; }
+.daily { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; border: 2px solid var(--card-line); display: flex; flex-direction: column; gap: 8px; }
+.daily h3 { font-size: 18px; }
+.daily-row { display: flex; align-items: center; gap: 10px; }
+.daily-day { width: 40px; display: flex; flex-direction: column; line-height: 1.1; font-size: 13px; }
+.daily-day small { color: var(--muted); font-weight: 700; }
+.daily-row.today .daily-day b { color: var(--primary); }
+.daily-row.today .rainbow { outline: 2px solid color-mix(in srgb, var(--primary) 60%, transparent); outline-offset: 2px; }
+.daily-row.future { opacity: .45; }
+.daily-n { width: 22px; text-align: right; font-weight: 800; font-size: 14px; color: var(--muted); }
 .bar-hint { margin: -4px 0 0; font-size: 13px; color: var(--muted); font-weight: 700; }
 
 .tally { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }

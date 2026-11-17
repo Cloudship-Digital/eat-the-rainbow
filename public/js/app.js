@@ -11,7 +11,23 @@ const state = {
   picked: [],          // words mode: [{food, servings}]
   kidPicked: [],       // kid mode: [food]
   shownCount: 0,
+  scope: "day",        // home rainbow: "day" (today) or "week"
 };
+
+// Servings and plants per color for one day (or the whole week when day is null).
+function statsFor(entries, day) {
+  const servings = Object.fromEntries(COLORS.map((c) => [c.id, 0]));
+  const byColor = Object.fromEntries(COLORS.map((c) => [c.id, new Set()]));
+  const all = new Set();
+  for (const e of entries) {
+    if (day && e.day !== day) continue;
+    servings[e.color] += e.servings; byColor[e.color].add(e.food); all.add(e.food);
+  }
+  return { servings, colorPlants: Object.fromEntries(COLORS.map((c) => [c.id, byColor[c.id].size])), plants: all.size };
+}
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const dayName = (day) => DAY_NAMES[new Date(day + "T12:00:00Z").getUTCDay()];
+const dayNum = (day) => Number(day.slice(8));
 
 // ---------- API ----------
 async function api(path, opts = {}) {
@@ -121,9 +137,17 @@ function renderHome(roll = false) {
   // Opening the app spins up from 0; after adding food it spins from the old count to the new one.
   if (roll) rollTo($("#home-count"), w.plants, state.shownCount !== w.plants ? state.shownCount : 0);
   state.shownCount = w.plants;
-  paintBar($("#home-bar"), w.servings);
+  // The rainbow shows today by default; the toggle switches to the whole week.
+  const day = state.scope === "day";
+  const st = day ? statsFor(w.entries || [], w.today) : w;
+  $$(".scope button").forEach((b) => { const on = b.dataset.scope === state.scope; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+  $("#scope-label").textContent = day
+    ? `${dayName(w.today)} ${MONTHS[Number(w.today.slice(5, 7)) - 1]} ${dayNum(w.today)} · ${st.plants} plant${st.plants === 1 ? "" : "s"} today`
+    : `${rangeLabel(w.start, w.end)} · ${st.plants} plant${st.plants === 1 ? "" : "s"} this week`;
+  $("#home-bar-empty").textContent = day ? "Eat a plant to start today's rainbow" : "Eat a plant to start this week's rainbow";
+  paintBar($("#home-bar"), st.servings);
   $("#home-tally").innerHTML = COLORS.map((c) =>
-    `<span class="tally-item ${w.colorPlants[c.id] ? "on" : ""}" style="--c:${c.hex}" title="${c.name}"><span class="tally-sq"></span><b>${w.colorPlants[c.id]}</b></span>`
+    `<span class="tally-item ${st.colorPlants[c.id] ? "on" : ""}" style="--c:${c.hex}" title="${c.name}"><span class="tally-sq"></span><b>${st.colorPlants[c.id]}</b></span>`
   ).join("");
 }
 
@@ -312,8 +336,19 @@ function renderWeek() {
   $("#week-next").disabled = w.start >= w.current;
   paintBar($("#week-bar"), w.servings);
 
-  // Day grid: Mon–Sun columns, one row per color, like the paper chart.
   const days = Array.from({ length: 7 }, (_, i) => addDays(w.start, i));
+
+  // One rainbow per day, Monday to Sunday, under the week's rainbow.
+  $("#daily").innerHTML = `<h3>Day by day</h3>` + days.map((d) => {
+    const st = statsFor(w.entries, d);
+    const cls = [d === w.today ? "today" : "", d > w.today ? "future" : ""].join(" ");
+    return `<div class="daily-row ${cls}"><span class="daily-day"><b>${dayName(d)}</b><small>${dayNum(d)}</small></span>
+      <div class="rainbow tiny" data-day="${d}"><span class="bar-fill"></span><span class="bar-empty">${d > w.today ? "" : "–"}</span></div>
+      <span class="daily-n">${st.plants || ""}</span></div>`;
+  }).join("");
+  $$("#daily .rainbow").forEach((el) => paintBar(el, statsFor(w.entries, el.dataset.day).servings));
+
+  // Day grid: Mon–Sun columns, one row per color, like the paper chart.
   const has = new Set(w.entries.map((e) => `${e.day}|${e.color}`));
   const names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   $("#day-grid").innerHTML =
@@ -387,6 +422,11 @@ function setDesign(d) {
 function bind() {
   window.addEventListener("hashchange", route);
   $("#home-bar").addEventListener("click", () => { state.viewWeek = state.week; location.hash = "#week"; });
+  $$(".scope button").forEach((b) => b.addEventListener("click", () => {
+    state.scope = b.dataset.scope;
+    try { localStorage.setItem("scope", state.scope); } catch (e) {}
+    renderHome();
+  }));
 
   $("#food-input").addEventListener("input", renderSuggest);
   $("#food-input").addEventListener("keydown", (e) => {
@@ -457,6 +497,7 @@ function bind() {
 
 // ---------- start ----------
 async function start() {
+  try { if (localStorage.getItem("scope") === "week") state.scope = "week"; } catch (e) {}
   renderBuddies();
   renderColorGrid();
   setDesign(document.documentElement.dataset.design);

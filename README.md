@@ -4,11 +4,12 @@ A family app that helps the kids eat more of the rainbow. It counts the **differ
 and a rainbow bar fills with the colors of everything eaten: more bananas make it more yellow. Weeks run Monday to Sunday
 and reset Sunday at 11:59 pm (Boise time). Past weeks are kept.
 
-- **Home:** a rolling number of plants this week, the ombré rainbow bar (tap it for the week page), and two big buttons.
+- **Home:** a rolling number of plants this week, the ombré rainbow bar with a **Today / This week** switch
+  (today's rainbow by default; the choice is remembered on the device), and two big buttons. Tap the bar for the week page.
 - **What we ate:** type a food, autocomplete finds it, add several (with ×2, ×3 for big helpings), then *Add to rainbow*.
   A food that isn't in the list asks for its color once and is remembered.
 - **Plate button (kid mode):** pick a color blob, tap food bubbles (pictures only), switch colors, then the big ✓.
-- **This week:** a Mon–Sun grid of the six colors (like the paper chart), the week's foods by color with counts,
+- **This week:** the week's rainbow, a **day-by-day** rainbow for each day Mon–Sun, a Mon–Sun grid of the six colors (like the paper chart), the week's foods by color with counts,
   ✕ to remove a mistake (tap twice), and ‹ › or swipe for past weeks.
 - **Celebrations:** fireworks in the colors just eaten; a flashing **New Plant!** sticker for a plant never eaten before;
   multi-color fireworks at 30 plants; and when all six colors are eaten in a week, a cat rides a unicorn across on a
