@@ -297,10 +297,17 @@ async function celebrate(c, colors) {
     await wait(1600);
     $("#banner").hidden = true;
   }
-  // 4. The whole rainbow: the cat rides the unicorn across the sky on a shooting star
+  // 4. A finished rainbow: a fun picture flies across the sky. Three rainbow days in a row bring Coco on the unicorn;
+  //    otherwise it's a random one of the pictures below (never the same one twice in a row).
   if (c.rainbow) {
     banner(c.rainbowText || "You ate the whole rainbow!");
     const u = $("#unicorn");
+    const img = $("img", u);
+    const src = c.coco ? "img/celebrate/coco-unicorn.webp" : pickFlyer();
+    img.src = src;
+    img.alt = c.coco ? "Coco riding the unicorn on a shooting star" : "A rainbow celebration";
+    u.classList.toggle("coco", !!c.coco);
+    try { await img.decode(); } catch (e) {}
     u.hidden = false; u.classList.remove("fly"); void u.offsetWidth; u.classList.add("fly");
     const stop = sparkleTrail(() => {
       const r = u.getBoundingClientRect();
@@ -311,6 +318,19 @@ async function celebrate(c, colors) {
     u.hidden = true;
     $("#banner").hidden = true;
   }
+}
+
+// The pictures that can fly across when a rainbow is finished. Coco's is kept for 3 rainbow days in a row.
+const FLYERS = ["img/unicorn.webp", ...["puppy-surf", "dragon-bubbles", "bunny-balloon", "narwhal-splash", "penguin-slide",
+  "fox-rocket", "sloth-swing", "panda-carpet", "turtle-cape", "kitten-skate", "dino-skates", "bear-balloons"]
+  .map((n) => `img/celebrate/${n}.webp`)];
+function pickFlyer() {
+  let last = null;
+  try { last = localStorage.getItem("lastFlyer"); } catch (e) {}
+  const pool = FLYERS.filter((f) => f !== last);
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  try { localStorage.setItem("lastFlyer", pick); } catch (e) {}
+  return pick;
 }
 
 function banner(text) {

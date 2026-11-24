@@ -87,9 +87,14 @@ async function api(request, env, url) {
     const weekDone = COLORS.every((c) => after.colorPlants[c] > 0) && !before.celebrated.includes("rainbow") && await markCelebrated(env, week, "rainbow");
     // One surprise unicorn on the first food added after this was released (Joshua asked for it on Nov 24, 2026).
     const surprise = await markCelebrated(env, "once", SURPRISE_UNICORN);
-    if (dayDone || weekDone || surprise) {
+    // Three rainbow days in a row (all six colors on each of 3 back-to-back days, inside one Mon–Sun week):
+    // Coco rides the unicorn, once per week.
+    const coco = threeInARow(after.entries) && await markCelebrated(env, week, "coco-streak");
+    if (dayDone || weekDone || surprise || coco) {
       celebrate.rainbow = true;
-      celebrate.rainbowText = weekDone ? "You ate the whole rainbow this week!"
+      celebrate.coco = coco;
+      celebrate.rainbowText = coco ? "3 rainbow days in a row! Coco rides the unicorn!"
+        : weekDone ? "You ate the whole rainbow this week!"
         : dayDone ? "Today's rainbow is complete!" : "Here comes the rainbow unicorn!";
     }
     return json({ ...after, celebrate });
@@ -114,6 +119,17 @@ async function api(request, env, url) {
   }
 
   return json({ error: "Not found" }, 404);
+}
+
+// True when 3 back-to-back days in these entries (one week) each have all six colors.
+export function threeInARow(entries) {
+  const colorsByDay = new Map();
+  for (const e of entries) {
+    if (!colorsByDay.has(e.day)) colorsByDay.set(e.day, new Set());
+    colorsByDay.get(e.day).add(e.color);
+  }
+  const full = new Set([...colorsByDay].filter(([, s]) => COLORS.every((c) => s.has(c))).map(([d]) => d));
+  return [...full].some((d) => full.has(addDays(d, 1)) && full.has(addDays(d, 2)));
 }
 
 async function markCelebrated(env, week, kind) {

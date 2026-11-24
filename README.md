@@ -13,7 +13,9 @@ and reset Sunday at 11:59 pm (Boise time). Past weeks are kept.
   ✕ to remove a mistake (tap twice), and ‹ › or swipe for past weeks.
 - **Celebrations:** fireworks in the colors just eaten; a flashing **New Plant!** sticker for a plant never eaten before;
   multi-color fireworks at 30 plants (once a week); and a cat rides a unicorn across on a shooting star the first time
-  all six colors are eaten **in a day** (every day it happens) and the first time in a week.
+  all six colors are eaten **in a day** (every day it happens) and the first time in a week. The picture is random
+  each time: the cat on the unicorn or one of 12 animals (`public/img/celebrate/`, list in `FLYERS` in `app.js`).
+  **Three rainbow days in a row** in the same Mon–Sun week bring Coco riding the unicorn instead (once a week).
 
 Colors follow the tiny health "Eat the Rainbow for Gut Health" sheet: red, orange, yellow, green, blue & purple, and
 brown & white. Only plants count (fruit, vegetables, nuts, seeds, beans, whole grains, herbs, spices, fermented plant

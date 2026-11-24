@@ -327,6 +327,7 @@ button.rainbow:active { transform: scale(.98); }
 @keyframes drop { from { transform: translateY(-150%); } }
 .unicorn { position: fixed; z-index: 65; left: 0; top: 0; width: min(78vw, 520px); pointer-events: none; }
 .unicorn img { width: 100%; display: block; animation: gallop .5s ease-in-out infinite; }
+.unicorn.coco { width: min(92vw, 620px); }
 .unicorn.fly { animation: fly 4.2s cubic-bezier(.45, .1, .55, .9) both; }
 @keyframes fly {
   0% { transform: translate(-100%, 70vh) rotate(-8deg); }
