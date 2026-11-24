@@ -299,7 +299,7 @@ async function celebrate(c, colors) {
   }
   // 4. The whole rainbow: the cat rides the unicorn across the sky on a shooting star
   if (c.rainbow) {
-    banner("You ate the whole rainbow!");
+    banner(c.rainbowText || "You ate the whole rainbow!");
     const u = $("#unicorn");
     u.hidden = false; u.classList.remove("fly"); void u.offsetWidth; u.classList.add("fly");
     const stop = sparkleTrail(() => {

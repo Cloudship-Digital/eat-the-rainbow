@@ -5,6 +5,7 @@
 const TZ = "America/Boise";
 const COLORS = ["red", "orange", "yellow", "green", "purple", "brown"];
 const GOAL = 30;
+const SURPRISE_UNICORN = "surprise-unicorn-2026-11-24";
 
 export default {
   async fetch(request, env) {
@@ -79,7 +80,18 @@ async function api(request, env, url) {
     };
     // The big celebrations play once per week, the first time the week crosses the line.
     if (after.plants >= GOAL && !before.celebrated.includes("thirty")) celebrate.thirty = await markCelebrated(env, week, "thirty");
-    if (COLORS.every((c) => after.colorPlants[c] > 0) && !before.celebrated.includes("rainbow")) celebrate.rainbow = await markCelebrated(env, week, "rainbow");
+    // The cat on the unicorn plays the first time each day's rainbow is complete (all six colors today),
+    // and the first time the week's is. markCelebrated only returns true once per key, so it never repeats.
+    const todayColors = new Set(after.entries.filter((e) => e.day === day).map((e) => e.color));
+    const dayDone = COLORS.every((c) => todayColors.has(c)) && await markCelebrated(env, day, "rainbow-day");
+    const weekDone = COLORS.every((c) => after.colorPlants[c] > 0) && !before.celebrated.includes("rainbow") && await markCelebrated(env, week, "rainbow");
+    // One surprise unicorn on the first food added after this was released (Joshua asked for it on Nov 24, 2026).
+    const surprise = await markCelebrated(env, "once", SURPRISE_UNICORN);
+    if (dayDone || weekDone || surprise) {
+      celebrate.rainbow = true;
+      celebrate.rainbowText = weekDone ? "You ate the whole rainbow this week!"
+        : dayDone ? "Today's rainbow is complete!" : "Here comes the rainbow unicorn!";
+    }
     return json({ ...after, celebrate });
   }
 

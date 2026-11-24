@@ -12,8 +12,8 @@ and reset Sunday at 11:59 pm (Boise time). Past weeks are kept.
 - **This week:** the week's rainbow, a **day-by-day** rainbow for each day Mon–Sun, a Mon–Sun grid of the six colors (like the paper chart), the week's foods by color with counts,
   ✕ to remove a mistake (tap twice), and ‹ › or swipe for past weeks.
 - **Celebrations:** fireworks in the colors just eaten; a flashing **New Plant!** sticker for a plant never eaten before;
-  multi-color fireworks at 30 plants; and when all six colors are eaten in a week, a cat rides a unicorn across on a
-  shooting star. The big two play once per week.
+  multi-color fireworks at 30 plants (once a week); and a cat rides a unicorn across on a shooting star the first time
+  all six colors are eaten **in a day** (every day it happens) and the first time in a week.
 
 Colors follow the tiny health "Eat the Rainbow for Gut Health" sheet: red, orange, yellow, green, blue & purple, and
 brown & white. Only plants count (fruit, vegetables, nuts, seeds, beans, whole grains, herbs, spices, fermented plant
